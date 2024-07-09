@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Instructions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .code-block {
+            position: relative;
+            background-color: #1e293b;
+            color: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', Courier, monospace;
+            margin-bottom: 1rem;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function checkPassword() {
+            var password = prompt("Enter Password:");
+            if (password !== "M.V02WVbZ@LsXw@Z") {
+                alert("Incorrect password. Access denied.");
+                window.location = "locked-out.html"; // Redirect to the locked out page
+            } else {
+                document.getElementById('content').style.display = 'block';
+            }
+        }
+
+        function copyCode(elementId) {
+            var code = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(code).then(function() {
+                alert("Code copied to clipboard!");
+            }, function() {
+                alert("Failed to copy code.");
+            });
+        }
+    </script>
+</head>
+<body class="bg-gray-100 p-10" onload="checkPassword()">
+    <div id="content" style="display:none;">
+        <h1 class="text-2xl font-bold mb-5">Setup Instructions</h1>
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode('code1')">Copy</button>
+            <pre id="code1">sudo apt update && apt upgrade
+
+curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+
+sudo apt install nodejs
+
+npm install -g pnpm
+
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+
+sudo apt update && sudo apt install postgresql-14 postgresql-contrib
+
+sudo systemctl start postgresql.service
+
+sudo -u postgres -i
+
+psql -d postgres
+
+CREATE USER "snailycad";
+
+ALTER USER "snailycad" WITH SUPERUSER;
+
+ALTER USER "snailycad" PASSWORD 'zVw&HJBf8W8tmBu';
+
+CREATE DATABASE "snaily-cadv4";
+
+exit
+
+exit
+
+sudo -s
+</pre>
+        </div>
+
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode('code2')">Copy</button>
+            <pre id="code2">cd /home/
+
+git clone https://github.com/SnailyCAD/snaily-cadv4.git
+
+cd snaily-cadv4
+
+pnpm install
+
+# wait until it's done
+
+cp .env.example .env
+
+nano .env
+
+# when done, press ctrl X, Y, Enter, and ctrl C
+</pre>
+        </div>
+
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode('code3')">Copy</button>
+            <pre id="code3">nano /home/snaily-cadv4/start.sh
+
+# copy and paste the following script
+#!/bin/bash
+
+# Navigate to the appropriate directory
+cd /home/snaily-cadv4
+
+# Execute the necessary commands
+echo "Copying environment settings..."
+node scripts/copy-env.mjs --client --api
+
+echo "Pulling latest changes from git..."
+git pull origin main
+
+echo "Stashing any changes and pulling latest changes again..."
+git stash && git pull origin main
+
+echo "Installing dependencies..."
+pnpm install
+
+echo "Building the project..."
+pnpm run build
+pnpm run start
+echo "All processes are completed."
+</pre>
+        </div>
+
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode('code4')">Copy</button>
+            <pre id="code4">nano /etc/systemd/system/start-snaily-cadv4.service
+
+# copy and paste the following configuration
+[Unit]
+Description=Start Snaily CADv4
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/snaily-cadv4/start.sh
+StandardOutput=append:/home/snaily-cadv4/start.log
+StandardError=append:/home/snaily-cadv4/start.log
+User=root
+WorkingDirectory=/home/snaily-cadv4
+
+[Install]
+WantedBy=multi-user.target
+</pre>
+        </div>
+
+        <div class="code-block">
+            <button class="copy-btn" onclick="copyCode('code5')">Copy</button>
+            <pre id="code5">chmod +x /home/snaily-cadv4/start.sh
+
+sudo systemctl daemon-reload
+sudo systemctl enable start-snaily-cadv4.service
+sudo systemctl start start-snaily-cadv4.service
+sudo systemctl restart start-snaily-cadv4.service
+
+cat /home/snaily-cadv4/start.log
+</pre>
+        </div>
+    </div>
+</body>
+</html>
