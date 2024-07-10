@@ -5,7 +5,7 @@ curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt install nodejs
 
 npm install -g pnpm
-
+npm install -g npm@10.8.2
 
 curl -fsSL https://get.pnpm.io/install.sh | sh -
 
