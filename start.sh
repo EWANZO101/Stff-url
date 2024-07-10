@@ -1,4 +1,4 @@
-sudo apt update && aptupgrade
+sudo apt update && apt upgrade
 
 curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 
