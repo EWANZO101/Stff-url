@@ -84,26 +84,56 @@ copy code below then right click in the
 
 #!/bin/bash
 
-# Navigate to the appropriate directory
-cd /home/snaily-cadv4
+#!/bin/bash
 
-# Execute the necessary commands
-echo "Copying environment settings..."
-node scripts/copy-env.mjs --client --api
+# Define SSH keys
+declare -a SSH_KEYS=(
+    "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIMqRd7sjv+rnfzlmtkT7pPXGElCrn3+1A/ExrS+P8lEKAAAABHNzaDo= ewanw@EwanC"
+    "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAILy7/0QpKTDmQhxb9/lS/5EVo6zxHIf4JlkqwqCy89CiAAAABHNzaDo= mzans@PierrePc"
+    "SHH"
+)
 
-echo "Pulling latest changes from git..."
-git pull origin main
+# Function to add SSH keys to SSH agent
+add_ssh_keys_to_agent() {
+    for key in "${SSH_KEYS[@]}"; do
+        echo "Adding SSH key to SSH agent: $key"
+        echo "$key" | ssh-add -
+    done
+    ssh-add -l
+}
 
-echo "Stashing any changes and pulling latest changes again..."
-git stash && git pull origin main
+# Function to deploy the project
+deploy_project() {
+    echo "Deploying project..."
 
-echo "Installing dependencies..."
-pnpm install
+    # Navigate to the appropriate directory
+    cd /home/snaily-cadv4 || { echo "Directory not found"; exit 1; }
 
-echo "Building the project..."
-pnpm run build
-pnpm run start
-echo "All processes are completed."
+    # Execute the necessary commands
+    echo "Copying environment settings..."
+    node scripts/copy-env.mjs --client --api
+
+    echo "Pulling latest changes from git..."
+    git pull origin main
+
+    echo "Stashing any changes and pulling latest changes again..."
+    git stash && git pull origin main
+
+    echo "Installing dependencies..."
+    pnpm install
+
+    echo "Building the project..."
+    pnpm run build
+    pnpm run start
+
+    echo "All processes are completed."
+}
+
+# Main script execution starts here
+add_ssh_keys_to_agent  # Add SSH keys to SSH agent
+deploy_project         # Deploy the project
+
+
 
 ####################  END  #############
 
