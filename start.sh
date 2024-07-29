@@ -82,7 +82,6 @@ copy code below then right click in the
 
 
 
-#!/bin/bash
 
 #!/bin/bash
 
