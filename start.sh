@@ -10,7 +10,7 @@ npm install -g npm@10.8.2
 curl -fsSL https://get.pnpm.io/install.sh | sh -
 
 
-sudo apt update && sudo apt install postgresql-14 postgresql-contrib
+sudo apt update && sudo apt install postgresql-14 postgresql-contrib -y
 
 
 sudo systemctl start postgresql.service
