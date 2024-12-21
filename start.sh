@@ -2,7 +2,7 @@
 sudo apt update && sudo apt upgrade -y
 
 # Set up the latest Node.js repository (ensure you're on version 18.x)
-curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_22.x| sudo -E bash -
 
 # Install the latest Node.js version (18.x)
 sudo apt install nodejs -y
