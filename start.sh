@@ -1,15 +1,22 @@
-sudo apt update && apt upgrade
+# Update package lists and upgrade installed packages
+sudo apt update && sudo apt upgrade -y
 
+# Set up the latest Node.js repository (ensure you're on version 18.x)
 curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 
-sudo apt install nodejs
+# Install the latest Node.js version (18.x)
+sudo apt install nodejs -y
 
+# Update pnpm to the latest version globally
 npm install -g pnpm
-npm install -g npm@10.8.2
 
+# Install the latest npm version
+npm install -g npm
+
+# Install pnpm using the official script (in case you need it installed via script)
 curl -fsSL https://get.pnpm.io/install.sh | sh -
 
-
+# Update package lists and install or update PostgreSQL to the latest available version (PostgreSQL 14)
 sudo apt update && sudo apt install postgresql-14 postgresql-contrib -y
 
 
