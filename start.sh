@@ -15,6 +15,7 @@ npm install -g npm
 
 # Install pnpm using the official script (in case you need it installed via script)
 curl -fsSL https://get.pnpm.io/install.sh | sh -
+npm install -g npm@11.0.0
 
 # Update package lists and install or update PostgreSQL to the latest available version (PostgreSQL 14)
 sudo apt update && sudo apt install postgresql-14 postgresql-contrib -y
