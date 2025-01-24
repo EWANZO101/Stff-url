@@ -95,30 +95,64 @@ copy code below then right click in the
 
 # Function to deploy the project
 deploy_project() {
-    echo "Deploying project..."
+    echo "Starting project deployment..."
 
-    # Navigate to the appropriate directory
-    cd /home/snaily-cadv4 || { echo "Directory not found"; exit 1; }
+    # Navigate to the project directory
+    PROJECT_DIR="/home/snaily-cadv4"
+    if ! cd "$PROJECT_DIR"; then
+        echo "Error: Directory $PROJECT_DIR not found or inaccessible."
+        exit 1
+    fi
 
-    # Execute the necessary commands
+    # Copy environment settings
     echo "Copying environment settings..."
-    node scripts/copy-env.mjs --client --api
+    if ! node scripts/copy-env.mjs --client --api; then
+        echo "Error: Failed to copy environment settings."
+        exit 1
+    fi
 
+    # Pull the latest changes from Git
     echo "Pulling latest changes from git..."
-    git pull origin main
+    if ! git pull origin main; then
+        echo "Error: Failed to pull changes from git."
+        exit 1
+    fi
 
+    # Stash any local changes and pull again
     echo "Stashing any changes and pulling latest changes again..."
-    git stash && git pull origin main
+    git stash || echo "Warning: No changes to stash."
+    if ! git pull origin main; then
+        echo "Error: Failed to pull changes from git after stashing."
+        exit 1
+    fi
 
-    echo "Installing dependencies..."
-    pnpm install
+    # Install dependencies
+    echo "Installing dependencies with pnpm..."
+    if ! pnpm install; then
+        echo "Error: Failed to install dependencies."
+        exit 1
+    fi
 
+    # Build the project
     echo "Building the project..."
-    pnpm run build
-    pnpm run start
+    if ! pnpm run build; then
+        echo "Error: Failed to build the project."
+        exit 1
+    fi
 
-    echo "All processes are completed."
+    # Start the project
+    echo "Starting the project..."
+    if ! pnpm run start; then
+        echo "Error: Failed to start the project."
+        exit 1
+    fi
+
+    echo "Deployment completed successfully."
 }
+
+# Call the function
+deploy_project
+
 
 ####################  END  #############
 
