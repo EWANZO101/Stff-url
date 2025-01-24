@@ -93,22 +93,6 @@ copy code below then right click in the
 
 #!/bin/bash
 
-# Define SSH keys
-declare -a SSH_KEYS=(
-    "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIMqRd7sjv+rnfzlmtkT7pPXGElCrn3+1A/ExrS+P8lEKAAAABHNzaDo= ewanw@EwanC"
-    "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAILy7/0QpKTDmQhxb9/lS/5EVo6zxHIf4JlkqwqCy89CiAAAABHNzaDo= mzans@PierrePc"
-    "SHH"
-)
-
-# Function to add SSH keys to SSH agent
-add_ssh_keys_to_agent() {
-    for key in "${SSH_KEYS[@]}"; do
-        echo "Adding SSH key to SSH agent: $key"
-        echo "$key" | ssh-add -
-    done
-    ssh-add -l
-}
-
 # Function to deploy the project
 deploy_project() {
     echo "Deploying project..."
@@ -135,12 +119,6 @@ deploy_project() {
 
     echo "All processes are completed."
 }
-
-# Main script execution starts here
-add_ssh_keys_to_agent  # Add SSH keys to SSH agent
-deploy_project         # Deploy the project
-
-
 
 ####################  END  #############
 
