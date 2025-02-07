@@ -204,7 +204,7 @@ sudo systemctl restart start-snaily-cadv4.service
 cat /home/snaily-cadv4/start.log
 
 ################################
-
+nano update_start.sh
 # Update start.sh script
 chmod +x update_start.sh
 
