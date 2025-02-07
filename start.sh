@@ -88,7 +88,7 @@ copy code below then right click in the
 #####
 
 
-# Define PostgreSQL configuration variables
+
 #!/bin/bash
 
 # Define PostgreSQL user and database
