@@ -225,3 +225,60 @@ sudo systemctl enable start-snaily-cadv4.service
 #####
 
    cat /home/snaily-cadv4/start.log
+
+
+
+################################
+
+update_start.sh
+
+chmod +x update_start.sh
+
+
+#!/bin/bash
+
+# Define the GitHub raw URL for update.sh
+GITHUB_URL="https://raw.githubusercontent.com/EWANZO101/Stff-url/main/update.sh"
+
+# Find the location of start.sh on the system
+START_SCRIPT_PATH=$(find / -type f -name "start.sh" 2>/dev/null | head -n 1)
+
+# If start.sh is found, update it
+if [ -n "$START_SCRIPT_PATH" ]; then
+    echo "start.sh found at $START_SCRIPT_PATH, updating..."
+    # Download and update the start.sh file from the GitHub URL
+    curl -o "$START_SCRIPT_PATH" "$GITHUB_URL"
+    echo "start.sh has been updated."
+else
+    echo "start.sh not found, adding to system..."
+    # Add the script to a default location, for example, /usr/local/bin/
+    DEFAULT_PATH="/usr/local/bin/start.sh"
+    curl -o "$DEFAULT_PATH" "$GITHUB_URL"
+    chmod +x "$DEFAULT_PATH"
+    echo "start.sh has been added to the system at $DEFAULT_PATH."
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
