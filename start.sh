@@ -88,9 +88,6 @@ copy code below then right click in the
 #####
 
 
-
-#!/bin/bash
-
 # Define PostgreSQL configuration variables
 #!/bin/bash
 
