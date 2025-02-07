@@ -37,7 +37,7 @@ ALTER USER "snailycad" PASSWORD 'zVw&HJBf8W8tmBu';
 CREATE DATABASE "snaily-cadv4";
 
 # Exit PostgreSQL shell
-exit
+\quit
 
 # Exit PostgreSQL user session
 exit
