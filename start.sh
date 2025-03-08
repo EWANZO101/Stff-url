@@ -91,35 +91,6 @@ copy code below then right click in the
 
 #!/bin/bash
 
-# Define PostgreSQL user and database
-USER="snailycad"
-DATABASE="snaily-cadv4"
-
-# Detect PostgreSQL version dynamically
-PG_VERSION=$(psql --version | awk '{print $3}' | cut -d '.' -f1)
-PG_HBA_FILE="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
-PG_CONF_FILE="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
-
-# Get the VM's IP address dynamically
-VM_IP=$(hostname -I | awk '{print $1}')
-
-# Check if PostgreSQL configuration files exist
-if [[ ! -f $PG_HBA_FILE ]] || [[ ! -f $PG_CONF_FILE ]]; then
-    echo "Error: PostgreSQL version $PG_VERSION not found or configuration files are missing."
-    exit 1
-fi
-
-# Add the entry to pg_hba.conf
-echo "host    $DATABASE   $USER   $VM_IP/32   trust" | sudo tee -a $PG_HBA_FILE
-
-# Update listen_addresses in postgresql.conf
-sudo sed -i "s/^#listen_addresses = 'localhost'/listen_addresses = '*'/" $PG_CONF_FILE
-
-# Reload PostgreSQL to apply changes
-sudo systemctl reload postgresql
-
-echo "Configuration updated: pg_hba.conf and postgresql.conf modified. PostgreSQL reloaded."
-
 
 # Function to deploy the project
 deploy_project() {
