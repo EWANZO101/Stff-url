@@ -18,7 +18,7 @@ curl -fsSL https://get.pnpm.io/install.sh | sh -
 
 
 # Update package lists and install or update PostgreSQL to the latest available version (PostgreSQL 14)
-sudo apt update && sudo apt install postgresql-14 postgresql-contrib -y
+sudo apt update && sudo apt install postgresql-16 postgresql-contrib -y
 
 
 sudo systemctl start postgresql.service
