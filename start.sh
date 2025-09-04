@@ -197,7 +197,7 @@ sudo systemctl enable start-snaily-cadv4.service
 
    cat /home/snaily-cadv4/start.log
 
-
+tail -f /home/snaily-cadv4/start.log
 
 ################################
 
