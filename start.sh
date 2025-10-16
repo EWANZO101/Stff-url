@@ -20,6 +20,57 @@ curl -fsSL https://get.pnpm.io/install.sh | sh -
 sudo apt update && sudo apt install -y postgresql-16 postgresql-contrib
 
 
+install_postgresql16.sh
+```````````````````````````````````
+
+
+#!/bin/bash
+# install_postgresql16.sh
+# Script to install PostgreSQL 16 on Ubuntu 22.04+ (Jammy or newer)
+
+set -e
+
+echo "🔄 Updating package lists..."
+sudo apt update -y
+
+echo "📦 Installing prerequisites..."
+sudo apt install -y wget gnupg lsb-release
+
+echo "➕ Adding PostgreSQL APT repository..."
+RELEASE=$(lsb_release -cs)
+echo "deb http://apt.postgresql.org/pub/repos/apt ${RELEASE}-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list > /dev/null
+
+echo "🔑 Importing PostgreSQL signing key..."
+wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+
+echo "🔄 Updating package lists (PostgreSQL repo added)..."
+sudo apt update -y
+
+echo "🚀 Installing PostgreSQL 16 and contrib package..."
+sudo apt install -y postgresql-16 postgresql-contrib
+
+echo "✅ PostgreSQL 16 installation complete!"
+
+# Enable and start PostgreSQL service
+echo "🧩 Enabling and starting PostgreSQL service..."
+sudo systemctl enable postgresql
+sudo systemctl start postgresql
+
+# Display PostgreSQL version
+echo "🔎 Checking PostgreSQL version..."
+psql --version
+
+# Optional: Show status
+sudo systemctl status postgresql --no-pager
+
+echo "🎉 PostgreSQL 16 is installed and running successfully!"
+
+
+
+``````````````````````````````````````````````````
+chmod +x install_postgresql16.sh
+./install_postgresql16.sh
+
 
 sudo systemctl start postgresql.service
 
