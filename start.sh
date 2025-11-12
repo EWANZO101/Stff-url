@@ -141,67 +141,80 @@ copy code below then right click in the
 
 
 #!/bin/bash
+set -e
+set -o pipefail
 
+# Colors for better readability
+GREEN="\033[0;32m"
+RED="\033[0;31m"
+YELLOW="\033[1;33m"
+NC="\033[0m" # No Color
+
+# Function to print status messages
+log() {
+    echo -e "${GREEN}[*]${NC} $1"
+}
+
+warn() {
+    echo -e "${YELLOW}[!]${NC} $1"
+}
+
+error_exit() {
+    echo -e "${RED}[x]${NC} $1" >&2
+    exit 1
+}
 
 # Function to deploy the project
 deploy_project() {
-    echo "Starting project deployment..."
+    log "Starting project deployment..."
 
-    # Navigate to the project directory
     PROJECT_DIR="/home/snaily-cadv4"
-    if ! cd "$PROJECT_DIR"; then
-        echo "Error: Directory $PROJECT_DIR not found or inaccessible."
-        exit 1
+
+    if [[ ! -d "$PROJECT_DIR" ]]; then
+        error_exit "Directory $PROJECT_DIR not found or inaccessible."
     fi
+
+    cd "$PROJECT_DIR" || error_exit "Failed to change directory to $PROJECT_DIR."
+
+    # Ensure git and pnpm are available
+    command -v git >/dev/null 2>&1 || error_exit "git not found. Please install git."
+    command -v pnpm >/dev/null 2>&1 || error_exit "pnpm not found. Please install pnpm."
+    command -v node >/dev/null 2>&1 || error_exit "node not found. Please install Node.js."
 
     # Copy environment settings
-    echo "Copying environment settings..."
+    log "Copying environment settings..."
     if ! node scripts/copy-env.mjs --client --api; then
-        echo "Error: Failed to copy environment settings."
-        exit 1
+        error_exit "Failed to copy environment settings."
     fi
 
-    # Pull the latest changes from Git
-    echo "Pulling latest changes from git..."
-    if ! git pull origin main; then
-        echo "Error: Failed to pull changes from git."
-        exit 1
-    fi
+    # Git operations
+    log "Stashing any local changes..."
+    git stash save "pre-deploy-$(date +%F-%T)" >/dev/null 2>&1 || warn "No changes to stash."
 
-    # Stash any local changes and pull again
-    echo "Stashing any changes and pulling latest changes again..."
-    git stash || echo "Warning: No changes to stash."
-    if ! git pull origin main; then
-        echo "Error: Failed to pull changes from git after stashing."
-        exit 1
-    fi
+    log "Fetching latest changes from origin/main..."
+    git fetch origin main || error_exit "Failed to fetch from git."
+
+    log "Pulling latest changes..."
+    git reset --hard origin/main || error_exit "Failed to reset to latest commit."
 
     # Install dependencies
-    echo "Installing dependencies with pnpm..."
-    if ! pnpm install; then
-        echo "Error: Failed to install dependencies."
-        exit 1
-    fi
+    log "Installing dependencies with pnpm..."
+    pnpm install || error_exit "Failed to install dependencies."
 
     # Build the project
-    echo "Building the project..."
-    if ! pnpm run build; then
-        echo "Error: Failed to build the project."
-        exit 1
-    fi
+    log "Building the project..."
+    pnpm run build || error_exit "Failed to build the project."
 
     # Start the project
-    echo "Starting the project..."
-    if ! pnpm run start; then
-        echo "Error: Failed to start the project."
-        exit 1
-    fi
+    log "Starting the project..."
+    pnpm run start || error_exit "Failed to start the project."
 
-    echo "Deployment completed successfully."
+    log "✅ Deployment completed successfully."
 }
 
-# Call the function
+# Execute deployment
 deploy_project
+
 
 
 
